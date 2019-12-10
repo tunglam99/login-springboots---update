@@ -1,6 +1,5 @@
 package com.codegym.login.model;
 
-import com.sun.tools.javac.jvm.Gen;
 import lombok.Data;
 
 import javax.persistence.*;
