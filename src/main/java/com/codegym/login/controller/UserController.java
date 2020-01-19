@@ -3,6 +3,7 @@ package com.codegym.login.controller;
 import com.codegym.login.model.JwtResponse;
 import com.codegym.login.model.Role;
 import com.codegym.login.model.User;
+import com.codegym.login.model.VerificationToken;
 import com.codegym.login.service.RoleService;
 import com.codegym.login.service.UserService;
 import com.codegym.login.service.impl.JwtService;
@@ -18,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -49,10 +51,10 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> createUser(@RequestBody User user){
+    public ResponseEntity<User> createUser(@RequestBody User user) {
         Iterable<User> users = userService.findAll();
-        for (User currentUser: users) {
-            if (currentUser.getUsername().equals(user.getUsername())){
+        for (User currentUser : users) {
+            if (currentUser.getUsername().equals(user.getUsername())) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         }
@@ -61,13 +63,18 @@ public class UserController {
         roles.add(role);
         user.setRoles(roles);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setConfirmPassword(passwordEncoder.encode(user.getConfirmPassword()));
         userService.save(user);
+        VerificationToken token = new VerificationToken(user);
+        token.setExpiryDate(10);
+
         return new ResponseEntity<>(user, HttpStatus.CREATED);
 
     }
+
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User user){
-        Authentication authentication =authenticationManager.authenticate(
+    public ResponseEntity<?> login(@RequestBody User user) {
+        Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -75,7 +82,18 @@ public class UserController {
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
-        return ResponseEntity.ok(new JwtResponse(jwt,userDetails.getUsername(), userDetails.getAuthorities()));
+        return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getUsername(), userDetails.getAuthorities()));
 
     }
+
+    /*@PostMapping("/change-password/{id}")
+    public ResponseEntity<User> changePassword(@PathVariable Long id, @RequestBody User user) {
+        Optional<User> optionalUser = userService.findById(id);
+        if (!optionalUser.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        if (userService.isCorrectConfirmPassword(user)) {
+
+        }
+    }*/
 }

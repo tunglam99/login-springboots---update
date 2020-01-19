@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
 import java.util.Optional;
 
 
@@ -86,9 +87,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public boolean isCorrectConfirmPassword(User user) {
+        boolean isCorrectConfirmPassword = false;
+        if (user.getPassword().equals(user.getConfirmPassword())) {
+            isCorrectConfirmPassword = true;
+        }
+        return isCorrectConfirmPassword;
     }
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

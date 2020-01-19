@@ -27,7 +27,7 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
     public static final String LOGIN = "/login";
 
     @Bean
-    public UserService userService(){
+    public UserService userService() {
         return new UserServiceImpl();
     }
 
@@ -43,17 +43,17 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public RestAuthenticationEntryPoint restServicesEntryPoint(){
+    public RestAuthenticationEntryPoint restServicesEntryPoint() {
         return new RestAuthenticationEntryPoint();
     }
 
     @Bean
-    public CustomAccessDeniedHandler customAccessDeniedHandler(){
+    public CustomAccessDeniedHandler customAccessDeniedHandler() {
         return new CustomAccessDeniedHandler();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(10);
     }
 
@@ -70,7 +70,8 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/",
                         LOGIN,
                         "/register",
-                        "/confirm-account/**").permitAll()
+                        "/confirm-account/**",
+                        "/users").permitAll()
                 .antMatchers(HttpMethod.GET, "/categories").access("hasRole('ROLE_USER')")
                 .antMatchers(HttpMethod.POST, "/categories").access("hasRole('ROLE_USER')")
                 .anyRequest().authenticated()

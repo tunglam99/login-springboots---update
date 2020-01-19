@@ -21,7 +21,8 @@ public interface UserService extends UserDetailsService {
 
     boolean checkLogin(User user);
 
-    boolean isRegister (User user);
+    boolean isRegister(User user);
 
-    User findByEmail (String email);
+    boolean isCorrectConfirmPassword(User user);
+
 }

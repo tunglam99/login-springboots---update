@@ -17,19 +17,19 @@ import java.util.Date;
 public class JwtService {
     private static final String SECRET_KEY = "11111111111111111111111111111111";
     private static final long EXPIRE_TIME = 86400000000L;
-    private static final Logger logger =  LoggerFactory.getLogger(JwtService.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(JwtService.class.getName());
 
     public String generateTokenLogin(Authentication authentication) {
         UserPrinciple userPrinciple = (UserPrinciple) authentication.getPrincipal();
         return Jwts.builder()
                 .setSubject(userPrinciple.getUsername())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime()+ EXPIRE_TIME*1000))
-                 .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
+                .setExpiration(new Date((new Date()).getTime() + EXPIRE_TIME * 1000))
+                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
                 .compact();
     }
 
-    public boolean validateJwtToken(String authToken){
+    public boolean validateJwtToken(String authToken) {
         try {
             Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(authToken);
             return true;

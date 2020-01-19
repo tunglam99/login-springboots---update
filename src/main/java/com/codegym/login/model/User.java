@@ -23,6 +23,8 @@ public class User implements Serializable {
 
     private String confirmPassword;
 
+    private String oldPassword;
+
     private String firstName;
 
     private String lastName;
