@@ -4,7 +4,9 @@ import com.codegym.login.model.VerificationToken;
 import com.codegym.login.repository.VerificationTokenRepository;
 import com.codegym.login.service.VerificationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class VerificationTokenServiceImpl implements VerificationTokenService {
     @Autowired
     private VerificationTokenRepository verificationTokenRepository;

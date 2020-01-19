@@ -2,8 +2,11 @@ package com.codegym.login.configuraton.security;
 
 import com.codegym.login.configuraton.customeConfig.CustomAccessDeniedHandler;
 import com.codegym.login.configuraton.customeConfig.RestAuthenticationEntryPoint;
+import com.codegym.login.model.VerificationToken;
 import com.codegym.login.service.UserService;
+import com.codegym.login.service.VerificationTokenService;
 import com.codegym.login.service.impl.UserServiceImpl;
+import com.codegym.login.service.impl.VerificationTokenServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -70,6 +73,7 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/",
                         LOGIN,
                         "/register",
+                        "/new-password/**",
                         "/confirm-account/**",
                         "/users").permitAll()
                 .antMatchers(HttpMethod.GET, "/categories").access("hasRole('ROLE_USER')")

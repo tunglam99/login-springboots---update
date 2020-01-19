@@ -1,6 +1,7 @@
 package com.codegym.login.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -8,6 +9,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
+@Entity
+@Data
 public class VerificationToken implements Serializable {
     private static final long serialVersionUID = 5926468583005150707L;
 

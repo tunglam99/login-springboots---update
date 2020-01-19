@@ -6,6 +6,7 @@ import com.codegym.login.model.User;
 import com.codegym.login.model.VerificationToken;
 import com.codegym.login.service.RoleService;
 import com.codegym.login.service.UserService;
+import com.codegym.login.service.VerificationTokenService;
 import com.codegym.login.service.impl.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,6 +45,9 @@ public class UserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private VerificationTokenService verificationTokenService;
+
     @GetMapping("/users")
     public ResponseEntity<Iterable<User>> showAllUser() {
         Iterable<User> users = userService.findAll();
@@ -67,7 +71,7 @@ public class UserController {
         userService.save(user);
         VerificationToken token = new VerificationToken(user);
         token.setExpiryDate(10);
-
+        verificationTokenService.save(token);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
 
     }
@@ -96,4 +100,50 @@ public class UserController {
 
         }
     }*/
+
+    @PostMapping("/change-password/{id}")
+    public ResponseEntity<User> changePassword(@PathVariable Long id, @RequestBody User user) {
+        Optional<User> userOptional = userService.findById(id);
+        if (!userOptional.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        String oldPassword = user.getOldPassword();
+        String newPassword = passwordEncoder.encode(user.getPassword());
+        String confirmPassword = passwordEncoder.encode(user.getConfirmPassword());
+        if (!passwordEncoder.matches(oldPassword, userOptional.get().getPassword())) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        user.setOldPassword(oldPassword);
+        user.setPassword(newPassword);
+        user.setConfirmPassword(confirmPassword);
+        userService.save(user);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/new-password/{id}", method = {RequestMethod.GET, RequestMethod.POST})
+    public ResponseEntity<User> updatePassword(@RequestParam("token") String token, @PathVariable Long id, @RequestBody User user) {
+        VerificationToken verificationToken = verificationTokenService.findByToken(token);
+        boolean isExpired = verificationToken.isExpired();
+        if (token == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        if (isExpired) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        Optional<User> userOptional = userService.findById(id);
+        if (!userOptional.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        if (!userService.isCorrectConfirmPassword(user)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        String newPassword = passwordEncoder.encode(user.getPassword());
+        String confirmPassword = passwordEncoder.encode(user.getConfirmPassword());
+        user.setPassword(newPassword);
+        user.setConfirmPassword(confirmPassword);
+        userService.save(user);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
 }
