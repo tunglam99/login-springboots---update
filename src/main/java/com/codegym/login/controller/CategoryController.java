@@ -47,4 +47,18 @@ public class CategoryController {
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
+    @PutMapping("/categories/{id}")
+    public ResponseEntity<Category> updateCategory(@Valid @RequestBody Category category,@PathVariable Long id, BindingResult bindingResult) {
+        if (bindingResult.hasFieldErrors()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        Optional<Category> categoryOptional = categoryService.findById(id);
+        if (!categoryOptional.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        category.setId(categoryOptional.get().getId());
+        categoryService.save(category);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
