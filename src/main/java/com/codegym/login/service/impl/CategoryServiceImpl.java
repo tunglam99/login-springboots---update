@@ -4,9 +4,11 @@ import com.codegym.login.model.Category;
 import com.codegym.login.repository.CategoryRepository;
 import com.codegym.login.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class CategoryServiceImpl implements CategoryService {
 
     @Autowired

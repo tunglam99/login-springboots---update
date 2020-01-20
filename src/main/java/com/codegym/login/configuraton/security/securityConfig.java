@@ -2,6 +2,7 @@ package com.codegym.login.configuraton.security;
 
 import com.codegym.login.configuraton.customeConfig.CustomAccessDeniedHandler;
 import com.codegym.login.configuraton.customeConfig.RestAuthenticationEntryPoint;
+import com.codegym.login.configuraton.filter.JwtAuthenticationFilter;
 import com.codegym.login.model.VerificationToken;
 import com.codegym.login.service.UserService;
 import com.codegym.login.service.VerificationTokenService;
@@ -65,6 +66,11 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
     }
 
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter();
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().ignoringAntMatchers("/**");
@@ -81,8 +87,8 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and().csrf().disable()
                 .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
-        /*http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling().accessDeniedHandler(customAccessDeniedHandler());*/
+        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling().accessDeniedHandler(customAccessDeniedHandler());
         http.sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.cors();
