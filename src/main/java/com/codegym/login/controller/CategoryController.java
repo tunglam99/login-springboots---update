@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin("*")
@@ -32,4 +33,18 @@ public class CategoryController {
     }
 
     @GetMapping("/categories/{id}")
+    public ResponseEntity<Category> categoryDetail(@PathVariable Long id){
+        Optional<Category> categoryOptional = categoryService.findById(id);
+        return categoryOptional.map(category -> new ResponseEntity<>(category,HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @DeleteMapping("/categories/{id}")
+    public ResponseEntity<Category> deleteCategory(@PathVariable Long id){
+        Optional<Category> category = categoryService.findById(id);
+        if (category.isPresent()) {
+            categoryService.remove(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 }
