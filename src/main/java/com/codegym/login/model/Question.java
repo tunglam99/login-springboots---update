@@ -2,10 +2,7 @@ package com.codegym.login.model;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 
 
@@ -21,4 +18,7 @@ public class Question implements Serializable {
     private String content;
 
     private Boolean status;
+
+    @ManyToOne
+    private Category category;
 }

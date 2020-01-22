@@ -82,8 +82,24 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
                         "/new-password/**",
                         "/confirm-account/**",
                         "/users").permitAll()
-                .antMatchers(HttpMethod.GET, "/categories").access("hasRole('ROLE_USER')")
-                .antMatchers(HttpMethod.POST, "/categories").access("hasRole('ROLE_USER')")
+                .antMatchers(HttpMethod.GET,
+                        "/categories",
+                "                    /questions").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+                .antMatchers(HttpMethod.POST,
+                        "/categories",
+                                    "/questions").access("hasRole('ROLE_ADMIN')")
+                .antMatchers(HttpMethod.PUT, "/categories",
+                        "/typeOfQuestions",
+                        "/questions",
+                        "/answers",
+                        "/quizzes").access("hasRole('ROLE_ADMIN')")
+                .antMatchers(HttpMethod.DELETE, "/categories",
+                        "/typeOfQuestions",
+                        "/questions",
+                        "/answers",
+                        "/quizzes").access("hasRole('ROLE_ADMIN')")
+                .antMatchers(HttpMethod.PUT, "/users")
+                .access("hasRole('ROLE_USER')")
                 .anyRequest().authenticated()
                 .and().csrf().disable()
                 .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
@@ -92,12 +108,5 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.cors();
-        http.headers()
-                // the headers you want here. This solved all my CORS problems!
-                .addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Origin", "*"))
-                .addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE"))
-                .addHeaderWriter(new StaticHeadersWriter("Access-Control-Max-Age", "3600"))
-                .addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Credentials", "true"))
-                .addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Headers", "Origin,Accept,X-Requested-With,Content-Type,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization"));
     }
 }

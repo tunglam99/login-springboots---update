@@ -6,10 +6,9 @@ import com.codegym.login.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @CrossOrigin("*")
@@ -21,5 +20,26 @@ public class QuestionController {
     public ResponseEntity<Question> createQuestion(@RequestBody Question question) {
         questionService.save(question);
         return new ResponseEntity<>(question,HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/questions/{id}")
+    public ResponseEntity<Question> deleteQuestion(@PathVariable Long id) {
+        Optional<Question> question = questionService.findById(id);
+        if (!question.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        questionService.remove(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/questions/{id}")
+    public ResponseEntity<Question> updateQuestion(@RequestBody Question question, @PathVariable Long id) {
+        Optional<Question> questionOptional = questionService.findById(id);
+        if (!questionOptional.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        question.setId(questionOptional.get().getId());
+        questionService.save(question);
+        return new ResponseEntity<>(question, HttpStatus.OK);
     }
 }
