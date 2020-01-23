@@ -1,5 +1,6 @@
 package com.codegym.login.service.impl;
 
+import com.codegym.login.model.Category;
 import com.codegym.login.model.Question;
 import com.codegym.login.repository.QuestionRepository;
 import com.codegym.login.service.QuestionService;
@@ -30,5 +31,15 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public void remove(Long id) {
         questionRepository.deleteById(id);
+    }
+
+    @Override
+    public Iterable<Question> findAllByCategoryAndStatusIsTrue(Category category) {
+        return questionRepository.findAllByCategoryAndStatusIsTrue(category);
+    }
+
+    @Override
+    public Iterable<Question> findAllByContentContainingAndStatusIsTrue(String content) {
+        return questionRepository.findAllByContentContainingAndStatusIsTrue(content);
     }
 }
