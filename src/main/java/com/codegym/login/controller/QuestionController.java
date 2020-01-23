@@ -57,4 +57,11 @@ public class QuestionController {
         Iterable<Question> questions = questionService.findAllByCategoryAndStatusIsTrue(currentCategory);
         return new ResponseEntity<>(questions,HttpStatus.OK);
     }
+
+    @GetMapping("/findAllQuestionByContentContainingAndStatusIsTrue")
+    public ResponseEntity<Iterable<Question>> findAllQuestionByContentContainingAndStatusIsTrue(@RequestParam("content")
+                                                                                                String content) {
+        Iterable<Question> questions = questionService.findAllByContentContainingAndStatusIsTrue(content);
+        return new ResponseEntity<>(questions,HttpStatus.OK);
+    }
 }
