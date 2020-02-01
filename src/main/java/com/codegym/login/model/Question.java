@@ -21,4 +21,7 @@ public class Question implements Serializable {
 
     @ManyToOne
     private Category category;
+
+    @ManyToOne
+    private TypeOfQuestion typeOfQuestion;
 }
