@@ -7,10 +7,7 @@ import com.codegym.login.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -38,5 +35,36 @@ public class AnswerController {
         Optional<Answer> answer = answerService.findById(id);
         return answer.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).
                 orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @PostMapping("/answers")
+    public ResponseEntity<Answer> createAnswer(@RequestBody Answer answer) {
+        Optional<Question> questionOptional = questionService.findById(answer.getQuestion().getId());
+        if (!questionOptional.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        answerService.save(answer);
+        return new ResponseEntity<>(answer, HttpStatus.OK);
+    }
+
+    @PutMapping("/answers/{id}")
+    public ResponseEntity<Answer> updateAnswer(@RequestBody Answer answer, @PathVariable Long id) {
+        Optional<Answer> answerOptional = answerService.findById(id);
+        if (!answerOptional.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        answer.setId(answerOptional.get().getId());
+        answerService.save(answer);
+        return new ResponseEntity<>(answer, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/answers/{id}")
+    public ResponseEntity<Answer> deleteAnswer(@PathVariable Long id) {
+        Optional<Answer> answerOptional = answerService.findById(id);
+        if (!answerOptional.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        answerService.remove(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

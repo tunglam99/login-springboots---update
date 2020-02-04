@@ -87,10 +87,12 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
                         "/findAllQuestionByTypeOfQuestion").permitAll()
                 .antMatchers(HttpMethod.GET,
                         "/categories",
-                "                    /questions").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+                        "/questions",
+                        "/answers/**").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
                 .antMatchers(HttpMethod.POST,
                         "/categories",
-                                    "/questions").access("hasRole('ROLE_ADMIN')")
+                        "/questions",
+                        "/answers").access("hasRole('ROLE_ADMIN')")
                 .antMatchers(HttpMethod.PUT, "/categories",
                         "/typeOfQuestions",
                         "/questions",
