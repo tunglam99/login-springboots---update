@@ -5,12 +5,16 @@ import com.codegym.login.model.Question;
 import com.codegym.login.repository.AnswerRepository;
 import com.codegym.login.service.AnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+
+@Service
 public class AnswerServiceImpl implements AnswerService {
     @Autowired
     AnswerRepository answerRepository;
+
     @Override
     public Iterable<Answer> findAllByQuestion(Question question) {
         return answerRepository.findAllByQuestion(question);
