@@ -3,8 +3,10 @@ package com.codegym.login.controller;
 
 import com.codegym.login.model.Category;
 import com.codegym.login.model.Question;
+import com.codegym.login.model.TypeOfQuestion;
 import com.codegym.login.service.CategoryService;
 import com.codegym.login.service.QuestionService;
+import com.codegym.login.service.TypeOfQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,9 @@ public class QuestionController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private TypeOfQuestionService typeOfQuestionService;
 
     @PostMapping("/questions")
     public ResponseEntity<Question> createQuestion(@RequestBody Question question) {
@@ -62,6 +67,16 @@ public class QuestionController {
     public ResponseEntity<Iterable<Question>> findAllQuestionByContentContainingAndStatusIsTrue(@RequestParam("content")
                                                                                                 String content) {
         Iterable<Question> questions = questionService.findAllByContentContainingAndStatusIsTrue(content);
+        return new ResponseEntity<>(questions,HttpStatus.OK);
+    }
+
+    @GetMapping("/findAllQuestionByTypeOfQuestion")
+    public ResponseEntity<Iterable<Question>> findAllQuestionByTypeOfQuestion(@RequestParam("typeOfQuestion")String typeOfQuestion){
+        TypeOfQuestion currentTypeOfQuestion = typeOfQuestionService.findByName(typeOfQuestion);
+        if (currentTypeOfQuestion == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        Iterable<Question> questions = questionService.findAllQuestionByTypeOfQuestion(currentTypeOfQuestion);
         return new ResponseEntity<>(questions,HttpStatus.OK);
     }
 }

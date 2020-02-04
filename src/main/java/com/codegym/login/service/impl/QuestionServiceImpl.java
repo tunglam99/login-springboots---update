@@ -2,6 +2,7 @@ package com.codegym.login.service.impl;
 
 import com.codegym.login.model.Category;
 import com.codegym.login.model.Question;
+import com.codegym.login.model.TypeOfQuestion;
 import com.codegym.login.repository.QuestionRepository;
 import com.codegym.login.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,5 +42,10 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public Iterable<Question> findAllByContentContainingAndStatusIsTrue(String content) {
         return questionRepository.findAllByContentContainingAndStatusIsTrue(content);
+    }
+
+    @Override
+    public Iterable<Question> findAllQuestionByTypeOfQuestion(TypeOfQuestion typeOfQuestion) {
+        return questionRepository.findAllQuestionByTypeOfQuestion(typeOfQuestion);
     }
 }

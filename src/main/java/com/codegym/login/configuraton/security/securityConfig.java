@@ -83,7 +83,8 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
                         "/confirm-account/**",
                         "/users",
                         "/findAllQuestionByCategoryAndStatusIsTrue",
-                        "/findAllQuestionByContentContainingAndStatusIsTrue").permitAll()
+                        "/findAllQuestionByContentContainingAndStatusIsTrue",
+                        "/findAllQuestionByTypeOfQuestion").permitAll()
                 .antMatchers(HttpMethod.GET,
                         "/categories",
                 "                    /questions").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
