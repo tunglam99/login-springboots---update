@@ -1,4 +1,6 @@
 package com.codegym.login.service;
 
-public interface QuizService {
+import com.codegym.login.model.Quiz;
+
+public interface QuizService extends GeneralService<Quiz> {
 }
