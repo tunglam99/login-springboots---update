@@ -2,6 +2,7 @@ package com.codegym.login.service.impl;
 
 import com.codegym.login.model.Category;
 import com.codegym.login.model.Question;
+import com.codegym.login.model.Quiz;
 import com.codegym.login.model.TypeOfQuestion;
 import com.codegym.login.repository.QuestionRepository;
 import com.codegym.login.service.QuestionService;
@@ -47,5 +48,10 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public Iterable<Question> findAllQuestionByTypeOfQuestion(TypeOfQuestion typeOfQuestion) {
         return questionRepository.findAllQuestionByTypeOfQuestion(typeOfQuestion);
+    }
+
+    @Override
+    public Iterable<Question> findAllByQuiz(Quiz quiz) {
+        return questionRepository.findAllByQuiz(quiz);
     }
 }

@@ -51,11 +51,18 @@ public class QuizController {
         return new ResponseEntity<>(quiz,HttpStatus.OK);
     }
 
-    @DeleteMapping("/quizzes")
+    @DeleteMapping("/quizzes/{id}")
     public ResponseEntity<Quiz> deleteQuiz(@PathVariable Long id){
         Optional<Quiz> quiz = quizService.findById(id);
         if (quiz.isPresent()) {
-            List<Question> questions = questionService.find
+            List<Question> questions = (List<Question>) questionService.findAllByQuiz(quiz.get());
+            for (Question question : questions){
+                question.setQuiz(null);
+                questionService.save(question);
+            }
+            quizService.remove(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }
