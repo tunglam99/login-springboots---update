@@ -88,6 +88,7 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,
                         "/categories",
                         "/questions",
+                        "/exams",
                         "/answers/**").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
                 .antMatchers(HttpMethod.POST,
                         "/categories",
