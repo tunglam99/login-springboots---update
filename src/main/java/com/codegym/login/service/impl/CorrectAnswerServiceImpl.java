@@ -13,6 +13,7 @@ import java.util.Optional;
 public class CorrectAnswerServiceImpl implements CorrectAnswerService {
     @Autowired
     private CorrectAnswerRepository correctAnswerRepository;
+
     @Override
     public Iterable<CorrectAnswer> findAllByQuestion(Question question) {
         return correctAnswerRepository.findAllByQuestion(question);
